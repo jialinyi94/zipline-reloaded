@@ -1,6 +1,5 @@
 # define typing hints
-from typing import Any
-from zipline.protocol import BarData
+from zipline.typing import ZiplineContext, BarData
 # import zipline functions
 from zipline import run_algorithm
 from zipline.api import order_target_percent, symbol
@@ -8,9 +7,6 @@ from zipline.api import order_target_percent, symbol
 import pandas as pd
 # import visualization
 import matplotlib.pyplot as plt
-
-
-ZiplineContext = Any
 
 
 def initialize(context: ZiplineContext):

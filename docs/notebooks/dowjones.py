@@ -22,7 +22,8 @@ def handle_data(context: ZiplineContext, data: BarData) -> None:
     stock_hist: pd.DataFrame = data.history(
         context.dji_symbols, "close", context.index_average_window, "1d"
     )
-
+    date = stock_hist.index[-1]
+    print(f"Date: {date}")
     # make an empty DataFrame to start with
     stock_analytics = pd.DataFrame()
 

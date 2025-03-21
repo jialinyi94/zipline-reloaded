@@ -8,36 +8,10 @@ import matplotlib.pyplot as plt
 def initialize(context: ZiplineContext) -> None:
     # which stock to trade
     dji = [
-        "AAPL",
-        "AXP",
-        "BA",
-        "CAT",
-        "CSCO",
-        "CVX",
-        "DD",
-        "DIS",
-        "GE",
-        "GS",
-        "HD",
-        "IBM",
-        "INTC",
-        "JNJ",
-        "JPM",
-        "KO",
-        "MCD",
-        "MMM",
-        "MRK",
-        "MSFT",
-        "NKE",
-        "PFE",
-        "PG",
-        "TRV",
-        "UNH",
-        "UTX",
-        "V",
-        "VZ",
-        "WMT",
-        "XOM",
+        'AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DOW', 'GS', 'HD',
+        'IBM',
+        'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE',
+        'PG', 'TRV', 'UNH', 'VZ', 'WBA', 'WMT', 'XOM'
     ]
     context.dji_symbols = [symbol(s) for s in dji]
     context.index_average_window = 100
@@ -48,7 +22,8 @@ def handle_data(context: ZiplineContext, data: BarData) -> None:
     stock_hist: pd.DataFrame = data.history(
         context.dji_symbols, "close", context.index_average_window, "1d"
     )
-
+    date = stock_hist.index[-1]
+    print(f"Date: {date}")
     # make an empty DataFrame to start with
     stock_analytics = pd.DataFrame()
 
@@ -56,8 +31,12 @@ def handle_data(context: ZiplineContext, data: BarData) -> None:
     stock_analytics["above_mean"] = stock_hist.iloc[-1] > stock_hist.mean()
 
     # set weight for stocks to buy or sell
-    stock_analytics.loc[stock_analytics["above_mean"], "weight"] = 1 / stock_analytics["above_mean"].sum()
-    stock_analytics.loc[~stock_analytics["above_mean"], "weight"] = 0.0
+    num_stocks = stock_analytics["above_mean"].sum()
+    if num_stocks > 0:
+        stock_analytics.loc[stock_analytics["above_mean"], "weight"] = 1 / num_stocks
+        stock_analytics.loc[~stock_analytics["above_mean"], "weight"] = 0.0
+    else:
+        stock_analytics["weight"] = 0.0
 
     # Iterate each row and place trades
     for stock, analytics in stock_analytics.iterrows():
@@ -90,8 +69,8 @@ def analyze(context: ZiplineContext, perf: pd.DataFrame):
 
 
 if __name__ == '__main__':
-    start = pd.Timestamp('2010-01-01')
-    end = pd.Timestamp('2018-01-01')
+    start = pd.Timestamp('2001-01-01')
+    end = pd.Timestamp('2025-01-01')
 
     run_algorithm(
         start=start,
@@ -101,5 +80,5 @@ if __name__ == '__main__':
         handle_data=handle_data,
         capital_base=10000,
         data_frequency='daily',
-        bundle='quandl'
+        bundle='us_equities',
     )

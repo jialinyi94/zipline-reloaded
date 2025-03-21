@@ -8,36 +8,10 @@ import matplotlib.pyplot as plt
 def initialize(context: ZiplineContext) -> None:
     # which stock to trade
     dji = [
-        "AAPL",
-        "AXP",
-        "BA",
-        "CAT",
-        "CSCO",
-        "CVX",
-        "DD",
-        "DIS",
-        "GE",
-        "GS",
-        "HD",
-        "IBM",
-        "INTC",
-        "JNJ",
-        "JPM",
-        "KO",
-        "MCD",
-        "MMM",
-        "MRK",
-        "MSFT",
-        "NKE",
-        "PFE",
-        "PG",
-        "TRV",
-        "UNH",
-        "UTX",
-        "V",
-        "VZ",
-        "WMT",
-        "XOM",
+        'AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DOW', 'GS', 'HD',
+        'IBM',
+        'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE',
+        'PG', 'TRV', 'UNH', 'VZ', 'WBA', 'WMT', 'XOM'
     ]
     context.dji_symbols = [symbol(s) for s in dji]
     context.index_average_window = 100
@@ -90,8 +64,8 @@ def analyze(context: ZiplineContext, perf: pd.DataFrame):
 
 
 if __name__ == '__main__':
-    start = pd.Timestamp('2010-01-01')
-    end = pd.Timestamp('2018-01-01')
+    start = pd.Timestamp('2001-01-01')
+    end = pd.Timestamp('2025-01-01')
 
     run_algorithm(
         start=start,
@@ -101,5 +75,5 @@ if __name__ == '__main__':
         handle_data=handle_data,
         capital_base=10000,
         data_frequency='daily',
-        bundle='quandl'
+        bundle='us_equities',
     )

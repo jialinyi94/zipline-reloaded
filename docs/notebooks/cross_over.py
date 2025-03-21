@@ -15,7 +15,7 @@ def initialize(context: ZiplineContext):
     Set parameters and preparation.
     """
     # which stock to trade
-    context.stock = symbol("AAPL")
+    context.stock = symbol("IBM")
     # moving average window
     context.index_average_window = 100
 
@@ -66,8 +66,8 @@ def analyze(context: ZiplineContext, perf: pd.DataFrame):
 
 
 if __name__ == '__main__':
-    start = pd.Timestamp('2010-01-01')
-    end = pd.Timestamp('2018-01-01')
+    start = pd.Timestamp('2001-01-03')
+    end = pd.Timestamp('2025-03-20')
 
     run_algorithm(
         start=start,
@@ -77,5 +77,5 @@ if __name__ == '__main__':
         handle_data=handle_data,
         capital_base=10000,
         data_frequency='daily',
-        bundle='quandl'
+        bundle='us_equities'
     )

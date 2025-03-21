@@ -20,10 +20,11 @@ def s_scores(
     lookback: int,
     center: bool,
 ):
+    cumres = residuals.cumsum()
     results = [
-        ar1(residuals[col]) for col in residuals.columns
+        ar1(cumres[col]) for col in cumres.columns
     ]
-    df_results = pd.DataFrame(results, columns=["a", "b", "var"], index=residuals.columns)
+    df_results = pd.DataFrame(results, columns=["a", "b", "var"], index=cumres.columns)
 
     df_results = df_results.loc[
         (df_results["b"] < np.exp(-2 / lookback))

@@ -30,8 +30,12 @@ def handle_data(context: ZiplineContext, data: BarData) -> None:
     stock_analytics["above_mean"] = stock_hist.iloc[-1] > stock_hist.mean()
 
     # set weight for stocks to buy or sell
-    stock_analytics.loc[stock_analytics["above_mean"], "weight"] = 1 / stock_analytics["above_mean"].sum()
-    stock_analytics.loc[~stock_analytics["above_mean"], "weight"] = 0.0
+    num_stocks = stock_analytics["above_mean"].sum()
+    if num_stocks > 0:
+        stock_analytics.loc[stock_analytics["above_mean"], "weight"] = 1 / num_stocks
+        stock_analytics.loc[~stock_analytics["above_mean"], "weight"] = 0.0
+    else:
+        stock_analytics["weight"] = 0.0
 
     # Iterate each row and place trades
     for stock, analytics in stock_analytics.iterrows():

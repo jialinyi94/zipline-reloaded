@@ -63,6 +63,24 @@ def relative_long_short_score(
 
 
 if __name__ == "__main__":
-    X = pd.DataFrame(np.random.randn(100, 3))
-    results = relative_long_short_score(X, X)
-    print(results)
+    import os
+    path_to_folder = os.path.expanduser("~/.data/test/daily")
+    tickers = ["AAPL", "IBM", "BA", "^DJI"]
+    all_df = []
+    for ticker in tickers:
+        path_to_file = os.path.join(path_to_folder, f"{ticker}.csv")
+        df = pd.read_csv(path_to_file, index_col=0)
+        all_df.append(df["close"])
+    all_df = pd.concat(all_df, axis=1, keys=tickers)
+    df_returns = all_df.pct_change().dropna()
+
+    scores = []
+    for window in df_returns.rolling(window=60, min_periods=60):
+        if window.shape[0] < 60:
+            continue
+        features = window.iloc[:, -1:]
+        targets = window.iloc[:, :-1]
+        s = relative_long_short_score(targets, features)
+        scores.append(s)
+    scores = pd.concat(scores, axis=1).T
+    print(scores)
